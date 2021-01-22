@@ -5,6 +5,7 @@
 
 ### 创建场景
 **火星背景和星空动画**
+
 1.创建新Scene
 2.创建一个平面体Plane
 3.创建一个材质球Material，指定贴图为mars.png
@@ -14,19 +15,25 @@
 7.打开Window-Animation-Animation创建一个动画文件
 8.Add Property，选择Material._Main_Tex_ST添加UV属性。
 9.进入录制状态，时间轴前进30帧，将ST属性中的w值设置为-1.
+
 **摄像机和灯光**
+
 1.在scene中调整视角角度
 2.选中MainCamera，选择GameObject-Align With View
 3.Window-Rendering-LightingSetting，选择AmbientSource，将Skybox改为Color，取消Lightmap的Auto选项
 4.GameObject-Light-PointLight置于火星上方，调节Range和Intensity
 
 ### 创建主角
-** 创建脚本**
+**创建脚本**
+
 1.将Player.fbx拖动到Hierachy窗口中创建游戏体
 2.创建Script-Player.cs
 3.将Player给到游戏体
+
 **控制飞船移动**
+
 1.在Player类中添加控制飞行速度的属性
+
 ```c#
 public float m_speed = 1;//移动速度
 ```
@@ -64,9 +71,13 @@ void Update()
         //this.transform.position += new Vector3(moveh, 0, movev));
     }
 ```
+
+
 **创建子弹**
+
 1.选择rocket.fbx模型，创建游戏体
 2.创建Rocket.cs脚本，给到游戏体
+
 ```c#
 	public float m_speed = 10;//飞行速度
     public float m_power = 1.0f;//威力
@@ -86,10 +97,13 @@ void Update()
     }
 ```
 3.将子弹从Hierachy窗口中拖拽到Project窗口中创建prefab。
+
 **发射子弹**
+
 1.在Player脚本中添加子弹位置组件的属性。
 2.在Player的Inspector窗口中将子弹的prefab给到该属性。
 3.在脚本中添加代码生成子弹
+
 ```c#
 	public float rocketTime = 0.1f;//子弹发射的间隔时间
     private float rocketTimer = 0;//控制子弹发射频率
@@ -110,8 +124,10 @@ void Update()
 
 ### 创建敌人
 **创建敌人**
+
 1.选择Enemy.fbx创建游戏体
 2.创建Enemy.cs脚本。给到游戏体
+
 ```c#
 	public float m_speed = 1;//速度
     public float m_life = 10;//生命值
@@ -130,14 +146,18 @@ void Update()
 
 ### 创建碰撞
 **添加碰撞体**
+
 1.给敌人添加Box Colllider，并勾选is Trigger。
 2.给敌人添加Rigidbody刚体组件，取消Use Gravity，选中Is Kinematic。
 3.apply到prefab
 4.同理为主角添加上述组件
+
 **触发碰撞**
+
 1.创建新Tag，PlayerRocket和Enemy
 2.将敌人的Tag设置为Enemy，将子弹的Tag设置为PlayerRocket，将主角的Tag设置为Player
 3.在Enemy脚本，子弹脚本和主角脚本中添加碰撞判断
+
 ```c#
 	//敌人
 	private void OnTriggerEnter(Collider other)
@@ -210,8 +230,10 @@ void Update()
 
 ### 高级敌人
 **创建敌人**
+
 1.通过Enemy2.fbx创建prefab
 2.创建SuperEnemy.cs脚本，继承Enemy，重写UpdateMove方法
+
 ```c#
 //重写移动方法
     protected override void UpdateMove()
@@ -220,10 +242,13 @@ void Update()
     }
 ```
 3.将敌人的Tag设置为Enemy，添加BoxCollider和Rigidbody组件，设置同前，修改生命为50.
+
 **敌人发射子弹**
+
 1.使用Rocket.fbx创建一个新的prefab,使用rocket2.png作为贴图，添加Rigidbody和boxCollider组件
 2.添加一个EnemyRocket的Tag
 3.创建EnemyRocket.cs脚本，并继承Rocket类 。
+
 ```c#
 	private void OnTriggerEnter(Collider other)
     {
@@ -270,9 +295,11 @@ void Update()
 
 ### 声音与特效
 **声音与特效**
+
 1.Import Package-Custom Package-选择shootingFX.unitypackage，导入。
 2.主角添加AudioSource组件
 3.修改Player脚本
+
 ```c#
 	public AudioClip m_shootAudio;//射击音效
     public Transform m_explosionFX;//爆炸特效
@@ -298,7 +325,9 @@ void Update()
 
 ### 敌人生成器
 **敌人生成器**
+
 1.创建EnemySpawn脚本，使用协程来创建敌人生成器，使生成器每几秒创建一个敌人。协程是迭代器的一种应用，实现异步的效果。
+
 ```c#
 	public Transform m_enemy;//敌人prefab
 
@@ -336,12 +365,16 @@ void Update()
 ```
 
 ### 游戏UI和战斗管理
-** UI界面**
+**UI界面**
+
 1.创建一个Canvas画布
 2.在Canvas上创建3个Text组件，记录生命，得分，最高分，调整位置和字体
 3.新建一个Canvas画布Canvas_gameover，创建Text组件显示“游戏失败”，再创建一个按钮，文字为“重新开始”
-4.**UI功能**
+
+**UI功能**
+
 1.创建脚本GameManager.cs（单例模式，单例模式通常应用于只创建一个实例的类，可以通过其类内部的静态实例调用，可以省去重复创建实例的过程，有多种写法，分为线程安全或不安全）
+
 ```c#
 	public static GameManager instance;//静态实例
 
@@ -435,8 +468,10 @@ void Update()
 
 ### 关卡跳转
 **关卡跳转**
+
 1.创建一个新的Scene-start
 2.创建一个TitleScene的脚本，将脚本给到摄像机（因为摄像机一直存在）
+
 ```c#
 	//按钮的回调方法
     public void OnButtonGameStart()
@@ -451,10 +486,12 @@ void Update()
 
 ### 鼠标控制主角
 **鼠标控制**
+
 1.创建一个3d object-Quad，使其铺满整个屏幕并使y轴坐标与主角相近
 2.取消选中Mesh Renderer隐藏物体的显示
 3.新建一个Layer，将该物体设置为新的Layer
 4.修改Player脚本
+
 ```c#
 	protected Vector3 m_targetPos;//目标位置
     public LayerMask m_inputLayer;//鼠标射线碰撞层
@@ -487,9 +524,11 @@ void Update()
 
 ### 精准的碰撞检测
 **碰撞检测**
+
 1.通过Enemy2b.fbx制作prefab
 2.将col子物体添加Mesh Collider，并取消选中Mesh Renderer，隐藏显示，只用作碰撞检测
 3.创建脚本EnemyRenderer，给到Enemy2子物体。
+
 ```c#
 	public Enemy m_enemy;//敌人实例
 
@@ -512,8 +551,10 @@ void Update()
 
 ### 自动创建Prefab
 **代码创建**
+
 1.创建一个Editor的文件夹，在其中创建一个ProcessModel的脚本，实现自动创建prefab的功能
 2.ProcessModel继承AssetPostprocessor类，该类用来处理资源导入，并引入UnityEditor的命名空间，这样就能使用Unity编辑器的API
+
 ```c#
 using UnityEngine;
 using UnityEditor;
@@ -616,6 +657,7 @@ public class ProcessModel : AssetPostprocessor
 
 ### 发布游戏
 **发布游戏**
+
 1.Edit-Project Settings-Player设置游戏名，公司名，图标。
 2.Resolution设置游戏窗口的大小，Run In Background使游戏运行在后台，Display Resolution Dialog设置为Enable，游戏在启动时会出现一个设置分辨率的窗口
 3.Icon设置不同大小的图标，专业版选中Show Splash Screen可以消除Unity图标
@@ -626,10 +668,12 @@ public class ProcessModel : AssetPostprocessor
 
 ### 重要知识点
 **知识点**
+
 1.transform.Translate方法用于移动位置，该方法有两个参数（第二个可选），第一个是Vector3类型的向量，第二个参数为坐标系，有Self自身坐标系和World世界坐标系。
 2.Vector3与坐标的区别。Vector3是向量，Vector3类也提供向量的很多运算。
 3.获得目标的方向：运用向量减法，目标位置减自身位置得出从自身指向目标的向量。
 4.Quaternion四元数是Unity用来表示角度的类，但使用起来不方便，Unity也提供欧拉角。如：
+
 ```c#
 	Vector3 v = target - pos;//获得方向
 	Quaternion.LookRotation(v);//返回四元数
